@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -28,36 +29,37 @@ public class ClienteController extends HttpServlet {
 
 
     @GetMapping
-    @ApiOperation(value = "")
-    public Page<Cliente> listarClientes(@PageableDefault(size = 10, sort = {"nome"}) Pageable paginacao) {
-        return clienteService.listarClientes(paginacao);
+    @ApiOperation(value = "Lista todos os clientes")
+    public ResponseEntity<Page<Cliente>> listarClientes(@PageableDefault(size = 10, sort = {"nome"}) Pageable paginacao) {
+        var page = clienteService.listarClientes(paginacao);
+        return ResponseEntity.ok(page);
     }
 
     @GetMapping(value = "/{id}")
-    @ApiOperation(value = "")
+    @ApiOperation(value = "Busca um unico cliente ")
     public Optional<Cliente> buscarPoId(@PathVariable Long id) {
-
         return clienteService.findById(id);
     }
 
     @PostMapping
-    @ApiOperation(value = "")
-    public ResponseEntity<Cliente> cadastrar(@RequestBody @Valid ClienteRecord clienteDTO, UriComponentsBuilder uriBuilder) throws ValidationException {
+    @Transactional
+    @ApiOperation(value = "Cadastar um cliente")
+    public ResponseEntity cadastrar(@RequestBody @Valid ClienteRecord clienteDTO, UriComponentsBuilder uriBuilder) throws ValidationException {
         Cliente cliente = clienteService.cadastrarCliente(clienteDTO);
-        URI endereco = uriBuilder.path("/clientes").buildAndExpand().toUri();
+        URI endereco = uriBuilder.path("/clientes/{id}").buildAndExpand(cliente.getId()).toUri();
         return ResponseEntity.created(endereco).body(cliente);
     }
 
     @PutMapping(value = "/{id}")
-    @ApiOperation(value = "")
-    public ResponseEntity<ClienteRecord> atualizar(@PathVariable Long id, @RequestBody @Valid ClienteRecord clienteDTO) {
-        ClienteRecord atualizado = clienteService.atualizarCliente(id, clienteDTO);
+    @ApiOperation(value = "Atualiza os clientes")
+    public ResponseEntity<ClienteRecord> atualizar(@PathVariable Long id, @RequestBody @Valid ClienteRecord clienteRecord) {
+        ClienteRecord atualizado = clienteService.atualizarCliente(id, clienteRecord);
         return ResponseEntity.ok(atualizado);
 
     }
 
     @DeleteMapping(value = "/{id}")
-    @ApiOperation(value = "")
+    @ApiOperation(value = "Excluiu um cliente ")
     public ResponseEntity<ClienteRecord> deletar(@PathVariable Long id) {
         clienteService.deletarCliente(id);
         return ResponseEntity.noContent().build();

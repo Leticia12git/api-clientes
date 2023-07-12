@@ -2,9 +2,6 @@ package br.com.projeto.APiClientes.models;
 
 import br.com.projeto.APiClientes.models.enums.Status;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -25,15 +22,8 @@ public class Cliente implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @NotBlank
-    @Size(max=100)
-
     private String nome;
-    @NotBlank
     private String telefone;
-    @NotBlank
-    @Size(max=100)
     private String email;
     @Enumerated(EnumType.STRING)
     private Status status;

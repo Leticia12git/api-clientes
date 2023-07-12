@@ -2,10 +2,12 @@ package br.com.projeto.APiClientes.services;
 
 import br.com.projeto.APiClientes.dtos.ClienteRecord;
 import br.com.projeto.APiClientes.models.Cliente;
+import br.com.projeto.APiClientes.models.enums.Status;
 import br.com.projeto.APiClientes.repositories.ClienteRepository;
 import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,9 @@ import java.util.Optional;
 public class ClienteService {
 
     private final ModelMapper modelMapper;
+
+    @Autowired
+    Cliente cliente;
     private final ClienteRepository clienteRepository;
 
     /**
@@ -37,22 +42,27 @@ public class ClienteService {
      */
     public Optional<Cliente> findById(Long id) {
         Cliente cliente = clienteRepository.findById(id).orElseThrow(RuntimeException::new);
-        ClienteRecord dto = modelMapper.map(cliente, ClienteRecord.class);
         return clienteRepository.findById(id);
     }
 
     /**
      * metodo para cadastra um cliente
      *
-     * @param clienteDTO
+     * @param
      * @return ClienteDTO
      */
     @Transactional(rollbackFor = Exception.class)
-    public Cliente cadastrarCliente(ClienteRecord clienteDTO) throws ValidationException {
-        Cliente cliente = modelMapper.map(clienteDTO, Cliente.class);
+    public Cliente cadastrarCliente(ClienteRecord clienteRecord) throws ValidationException {
+        Cliente cliente = modelMapper.map(clienteRecord, Cliente.class);
+        cliente.setNome("");
+        cliente.setEmail("");
+        cliente.setTelefone("");
+        cliente.setStatus(Status.CRIADO);
         clienteRepository.save(cliente);
         return modelMapper.map(cliente, Cliente.class);
-    }
+        }
+
+
 
 
     /**
