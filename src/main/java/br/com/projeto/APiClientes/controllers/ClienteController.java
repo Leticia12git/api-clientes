@@ -4,6 +4,7 @@ import br.com.projeto.APiClientes.dtos.ClienteRecord;
 import br.com.projeto.APiClientes.models.Cliente;
 import br.com.projeto.APiClientes.services.ClienteService;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.validation.Valid;
 import jakarta.validation.ValidationException;
@@ -21,6 +22,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/clientes")
+@SecurityRequirement(name = "bearer-key")
 public class ClienteController extends HttpServlet {
 
 

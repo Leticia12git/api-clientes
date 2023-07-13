@@ -21,8 +21,6 @@ public class ClienteService {
 
     private final ModelMapper modelMapper;
 
-    @Autowired
-    Cliente cliente;
     private final ClienteRepository clienteRepository;
 
     /**
@@ -54,9 +52,9 @@ public class ClienteService {
     @Transactional(rollbackFor = Exception.class)
     public Cliente cadastrarCliente(ClienteRecord clienteRecord) throws ValidationException {
         Cliente cliente = modelMapper.map(clienteRecord, Cliente.class);
-        cliente.setNome("");
-        cliente.setEmail("");
-        cliente.setTelefone("");
+        cliente.setNome(clienteRecord.nome());
+        cliente.setEmail(clienteRecord.email());
+        cliente.setTelefone(clienteRecord.telefone());
         cliente.setStatus(Status.CRIADO);
         clienteRepository.save(cliente);
         return modelMapper.map(cliente, Cliente.class);
