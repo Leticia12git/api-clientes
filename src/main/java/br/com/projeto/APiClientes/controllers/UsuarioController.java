@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/login")
-@SecurityRequirement(name = "bearer-key")
 public class UsuarioController {
 
     @Autowired

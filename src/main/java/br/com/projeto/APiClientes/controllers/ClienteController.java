@@ -21,7 +21,6 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/clientes")
-@SecurityRequirement(name = "bearer-key")
 public class ClienteController extends HttpServlet {
 
 
